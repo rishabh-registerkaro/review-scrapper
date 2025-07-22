@@ -1,50 +1,59 @@
 import puppeteer from 'puppeteer';
 
 class PuppeteerConfig {
-  static getBrowserConfig() {
-    const isProduction = process.env.NODE_ENV === 'production';
-    const isRender = process.env.RENDER === 'true';
-    
-    console.log(`Environment: ${process.env.NODE_ENV}, Render: ${isRender}`);
-    
-    const config = {
-      headless: isProduction ? 'new' : false,
-      args: [
-        '--window-size=1920,1080',
-        '--disable-web-security',
-        '--disable-features=VizDisplayCompositor'
-      ],
-      defaultViewport: {
-        width: 1920,
-        height: 1080
+    static getBrowserConfig() {
+        const isProduction = process.env.NODE_ENV === 'production';
+        const isRender = process.env.RENDER === 'true';
+        
+        const config = {
+          headless: isProduction ? 'new' : false,
+          args: [
+            '--window-size=1920,1080',
+            '--disable-web-security',
+            '--disable-features=VizDisplayCompositor'
+          ],
+          defaultViewport: {
+            width: 1920,
+            height: 1080
+          }
+        };
+      
+        // Production-specific configurations
+        if (isProduction) {
+          config.args.push(
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--disable-gpu',
+            '--single-process'
+          );
+        }
+      
+        // Render.com specific configurations for crashpad
+        if (isRender) {
+          config.args.push(
+            '--disable-breakpad',  // Disable crash reporting
+            '--disable-crash-reporter',
+            '--disable-extensions-except',
+            '--disable-extensions',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding'
+          );
+          
+          // Set temp directories for Chrome
+          config.env = {
+            TMPDIR: '/tmp',
+            XDG_CONFIG_HOME: '/tmp/.chromium',
+            XDG_CACHE_HOME: '/tmp/.chromium'
+          };
+        }
+      
+        return config;
       }
-    };
-
-    // Production-specific configurations
-    if (isProduction) {
-      config.args.push(
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu'
-      );
-    }
-
-    // Render.com specific configurations
-    if (isRender) {
-      config.args.push(
-        '--single-process',
-        '--disable-background-timer-throttling',
-        '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding'
-      );
-    }
-
-    return config;
-  }
 
   static async createBrowser() {
     try {
