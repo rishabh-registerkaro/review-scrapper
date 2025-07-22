@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: trustpilot-scraper
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: RENDER
+        value: true
+      - key: DEFAULT_TIMEOUT
+        value: 45000
+      - key: MAX_PAGES
+        value: 10
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
