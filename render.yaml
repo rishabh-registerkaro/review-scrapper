@@ -7,13 +7,11 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: NODE_ENV
-        value: production
+        value: production  # This is crucial!
       - key: PORT
-        value: 10000
+        value: 10000      # Render's default
       - key: HOST
-        value: 0.0.0.0
-      - key: RENDER
-        value: true
+        value: 0.0.0.0    # Required for Render
       - key: DEFAULT_TIMEOUT
         value: 45000
       - key: MAX_PAGES
