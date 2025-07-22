@@ -1,0 +1,29 @@
+{
+  "name": "trustpilot_reviews_scrapper",
+  "version": "1.0.0",
+  "description": "Production-ready Trustpilot reviews scraper",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+   "start": "NODE_ENV=production node src/app.js",
+    "dev": "NODE_ENV=development nodemon src/app.js",
+    "build": "echo 'Build completed'",
+    "test": "curl -X POST http://localhost:3000/api/scrape -H 'Content-Type: application/json' -d '{\"url\": \"https://www.trustpilot.com/review/safeledger.ae\"}'",
+    "docker:build": "docker build -t trustpilot-scraper .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env.production trustpilot-scraper"
+  },
+  "author": "Rishabh",
+  "license": "MIT",
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "puppeteer": "^24.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
